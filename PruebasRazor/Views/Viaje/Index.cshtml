@@ -1,0 +1,30 @@
+﻿@using PruebasRazor.Models
+@model List<ViajeCLS>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@Html.ActionLink("Agregar", "Agregar", "Marca", null, new { @class = "btn btn-primary" })
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td width="33%">@Html.LabelFor(p => Model[0].iidViaje)</td>
+            <td width="33%">@Html.LabelFor(p => Model[0].nombreLugarOrigen)</td>
+            <td width="33%">@Html.LabelFor(p => Model[0].nombreLugarDestino)</td>
+            <td width="33%">@Html.LabelFor(p => Model[0].nombreBus)</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.iidViaje</td>
+                <td>@item.nombreLugarOrigen</td>
+                <td>@item.nombreLugarDestino</td>
+                <td>@item.nombreBus</td>
+            </tr>
+        }
+    </tbody>
+</table>
