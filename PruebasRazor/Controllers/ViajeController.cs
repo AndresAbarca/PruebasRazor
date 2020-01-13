@@ -32,66 +32,87 @@ namespace PruebasRazor.Controllers
                 return View(listaViaje);
         }
 
+        public void listarLugar()
+        {
+            List<SelectListItem> lista;
+            using (var bd = new BDPasajeEntities())
+            {
+                lista = (from item in bd.Lugar
+                         where item.BHABILITADO == 1
+                         select new SelectListItem
+                         {
+                             Text = item.NOMBRE,
+                             Value = item.IIDLUGAR.ToString()
+                         }).ToList();
+                lista.Insert(0, new SelectListItem { Text = "--Seleccione--", Value = "" });
+                ViewBag.listaLugar = lista;
+            }
+        }
+
+        public void listarBus()
+        {
+            List<SelectListItem> lista;
+            using (var bd = new BDPasajeEntities())
+            {
+                lista = (from item in bd.Bus
+                         where item.BHABILITADO == 1
+                         select new SelectListItem
+                         {
+                             Text = item.PLACA,
+                             Value = item.IIDBUS.ToString()
+                         }).ToList();
+                lista.Insert(0, new SelectListItem { Text = "--Seleccione--", Value = "" });
+                ViewBag.listaBus = lista;
+            }
+        }
+
+        public void listarCombos() {
+            listarBus();
+            listarLugar();
+        }
+
         public ActionResult Agregar()
         {
+            listarCombos();
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Agregar(ViajeCLS oViajeCLS)
+        public ActionResult Editar(int id)
         {
+            listarCombos();
+            ViajeCLS oViajeCLS = new ViajeCLS();
+            using (var bd = new BDPasajeEntities())
+            {
+                Viaje oViaje = bd.Viaje.Where(p => p.IIDVIAJE.Equals(id)).First();
+                oViajeCLS.iidViaje = oViaje.IIDVIAJE;
+                oViajeCLS.precio = (decimal) oViaje.PRECIO;
+                oViajeCLS.iidLugarDestino = (int) oViaje.IIDLUGARDESTINO;
+                oViajeCLS.iidLugarOrigen = (int) oViaje.IIDLUGARORIGEN;
+                oViajeCLS.fechaViaje = (DateTime) oViaje.FECHAVIAJE;
+                oViajeCLS.iidBus = (int) oViaje.IIDBUS;
+                oViajeCLS.numeroAsientosDisponibles = (int) oViaje.NUMEROASIENTOSDISPONIBLES;
+            }
+            return View(oViajeCLS);
+        }
+
+        [HttpPost]
+        public ActionResult Editar(ViajeCLS oViajeCLS)
+        {
+            int idviaje = oViajeCLS.iidViaje;
             if (!ModelState.IsValid)
             {
                 return View(oViajeCLS);
             }
             using (var bd = new BDPasajeEntities())
             {
-                Viaje oViaje = new Viaje();
-                oViaje.placa = oViajeCLS.nombre;
-                oViaje.NOMBRE = oViajeCLS.nombre;
-                oViaje.NOMBRE = oViajeCLS.nombre;
-                oViaje.NOMBRE = oViajeCLS.nombre;
-                oViaje.NOMBRE = oViajeCLS.nombre;
-                oViaje.NOMBRE = oViajeCLS.nombre;
-                oViaje.BHABILITADO = 1;
-                bd.Sucursal.Add(oSucursal);
-                bd.SaveChanges();
-            }
-            return RedirectToAction("Index");
-        }
-
-        public ActionResult Editar(int id)
-        {
-            SucursalCLS oSucursalCLS = new SucursalCLS();
-            using (var bd = new BDPasajeEntities())
-            {
-                Sucursal oSucursal = bd.Sucursal.Where(p => p.IIDSUCURSAL.Equals(id)).First();
-                oSucursalCLS.iidsucursal = oSucursal.IIDSUCURSAL;
-                oSucursalCLS.nombre = oSucursal.NOMBRE;
-                oSucursalCLS.direccion = oSucursal.DIRECCION;
-                oSucursalCLS.telefono = oSucursal.TELEFONO;
-                oSucursalCLS.email = oSucursal.EMAIL;
-                oSucursalCLS.fechaApertura = (DateTime)oSucursal.FECHAAPERTURA;
-            }
-            return View(oSucursalCLS);
-        }
-
-        [HttpPost]
-        public ActionResult Editar(SucursalCLS oSucursalCLS)
-        {
-            int idSucursal = oSucursalCLS.iidsucursal;
-            if (!ModelState.IsValid)
-            {
-                return View(oSucursalCLS);
-            }
-            using (var bd = new BDPasajeEntities())
-            {
-                Sucursal oSucursal = bd.Sucursal.Where(p => p.IIDSUCURSAL.Equals(idSucursal)).First();
-                oSucursal.NOMBRE = oSucursalCLS.nombre;
-                oSucursal.DIRECCION = oSucursalCLS.direccion;
-                oSucursal.TELEFONO = oSucursalCLS.telefono;
-                oSucursal.EMAIL = oSucursalCLS.email;
-                oSucursal.FECHAAPERTURA = oSucursalCLS.fechaApertura;
+                Viaje oViaje = bd.Viaje.Where(p => p.IIDVIAJE.Equals(idviaje)).First();
+                oViaje.IIDVIAJE = oViajeCLS.iidViaje;
+                oViaje.PRECIO = oViajeCLS.precio;
+                oViaje.IIDLUGARDESTINO = oViajeCLS.iidLugarDestino;
+                oViaje.IIDLUGARORIGEN = oViajeCLS.iidLugarOrigen;
+                oViaje.FECHAVIAJE = oViajeCLS.fechaViaje;
+                oViaje.IIDBUS = oViajeCLS.iidBus;
+                oViaje.NUMEROASIENTOSDISPONIBLES = oViajeCLS.numeroAsientosDisponibles;
                 bd.SaveChanges();
             }
             return RedirectToAction("Index");

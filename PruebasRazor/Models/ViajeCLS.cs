@@ -17,15 +17,17 @@ namespace PruebasRazor.Models
         [Required]
         public int iidLugarDestino { get; set; }
         [Display(Name = "Precio")]
+        [Range(0,100000,ErrorMessage ="Rango fuera de índices")]
         [Required]
-        public double precio { get; set; }
+        public decimal precio { get; set; }
         [Display(Name = "Fecha Viaje")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)] 
         [Required]
         public DateTime fechaViaje { get; set; }
         [Display(Name = "Bus")]
         [Required]
-        public string iidBus { get; set; }
+        public int iidBus { get; set; }
         [Display(Name = "Numero Asientos Disponibles")]
         [Required]
         public int numeroAsientosDisponibles { get; set; }
