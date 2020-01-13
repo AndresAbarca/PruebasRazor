@@ -47,11 +47,18 @@ namespace PruebasRazor.Controllers
         [HttpPost]
         public ActionResult Editar(MarcaCLS oMarcaCLS)
         {
-            if (!ModelState.IsValid)
+            int nregistrosEncontrados = 0;
+            string nombreMarca = oMarcaCLS.nombre;
+            int idMarca = oMarcaCLS.iidmarca;
+            using (var bd = new BDPasajeEntities())
             {
+                nregistrosEncontrados = bd.Marca.Where(p => p.NOMBRE.Equals(nombreMarca) && !p.IIDMARCA.Equals(idMarca)).Count();
+            }
+            if (!ModelState.IsValid || nregistrosEncontrados >= 1)
+            {
+                if (nregistrosEncontrados >= 1) oMarcaCLS.mensajeError = "El nombre marca ya existe";
                 return View(oMarcaCLS);
             }
-            int idMarca = oMarcaCLS.iidmarca;
             using (var bd = new BDPasajeEntities())
             {
                 Marca oMarca = bd.Marca.Where(p => p.IIDMARCA.Equals(idMarca)).First();
@@ -65,8 +72,15 @@ namespace PruebasRazor.Controllers
         [HttpPost]
         public ActionResult Agregar(MarcaCLS oMarcaCLS)
         {
-            if (!ModelState.IsValid)
+            int nregistrosEncontrados = 0;
+            string nombreMarca = oMarcaCLS.nombre;
+            using (var bd = new BDPasajeEntities())
             {
+                nregistrosEncontrados = bd.Marca.Where(p => p.NOMBRE.Equals(nombreMarca)).Count();
+            }
+            if (!ModelState.IsValid || nregistrosEncontrados >= 1)
+            {
+                if (nregistrosEncontrados >= 1) oMarcaCLS.mensajeError = "El nombre marca ya existe";
                 return View(oMarcaCLS);
             }
             else
@@ -80,6 +94,18 @@ namespace PruebasRazor.Controllers
                     bd.Marca.Add(oMarca);
                     bd.SaveChanges();
                 }
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Eliminar(int idd)
+        {
+            using (var bd = new BDPasajeEntities())
+            {
+                Marca oMarca = bd.Marca.Where(p => p.IIDMARCA.Equals(idd)).First();
+                oMarca.BHABILITADO = 0;
+                bd.SaveChanges();
             }
             return RedirectToAction("Index");
         }

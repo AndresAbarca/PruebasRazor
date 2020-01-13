@@ -4,7 +4,7 @@
     List<SelectListItem> listaBus = (List<SelectListItem>)ViewBag.listaBus;
     List<SelectListItem> listaLugar = (List<SelectListItem>)ViewBag.listaLugar;
 }
-@using (Html.BeginForm(Html.BeginForm("Editar", "Viaje", FormMethod.Post, new { @id = "frmViaje" })))
+@using (Html.BeginForm(Html.BeginForm("Editar", "Viaje", FormMethod.Post, new { @id = "frmEditar" })))
 {
     @Html.AntiForgeryToken()
 
@@ -78,16 +78,6 @@
         </div>
     </div>
 }
-
-<script>
-    var frmEditar = document.getElementById("frmViaje");
-    frmEditar.onsubmit = function (e) {
-        e.preventDefault();
-        if (confirm("¿Guardar cambios?") == 1) {
-            frmEditar.submit();
-        }
-    }
-</script>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

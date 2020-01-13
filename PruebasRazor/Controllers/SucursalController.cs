@@ -17,7 +17,7 @@ namespace PruebasRazor.Controllers
             using (var bd = new BDPasajeEntities())
             {
                 listaSucursal = (from sucursal in bd.Sucursal
-                                 where sucursal.BHABILITADO==1
+                                 where sucursal.BHABILITADO == 1
                                  select new SucursalCLS
                                  {
                                      iidsucursal = sucursal.IIDSUCURSAL,
@@ -34,17 +34,29 @@ namespace PruebasRazor.Controllers
             return View();
         }
 
+        public ActionResult Eliminar(int id)
+        {
+            using (var bd = new BDPasajeEntities())
+            {
+                Sucursal oSucursal = bd.Sucursal.Where(p => p.IIDSUCURSAL.Equals(id)).First();
+                oSucursal.BHABILITADO = 0;
+                bd.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
         public ActionResult Editar(int id)
         {
             SucursalCLS oSucursalCLS = new SucursalCLS();
-            using (var bd = new BDPasajeEntities()) {
+            using (var bd = new BDPasajeEntities())
+            {
                 Sucursal oSucursal = bd.Sucursal.Where(p => p.IIDSUCURSAL.Equals(id)).First();
                 oSucursalCLS.iidsucursal = oSucursal.IIDSUCURSAL;
                 oSucursalCLS.nombre = oSucursal.NOMBRE;
                 oSucursalCLS.direccion = oSucursal.DIRECCION;
                 oSucursalCLS.telefono = oSucursal.TELEFONO;
                 oSucursalCLS.email = oSucursal.EMAIL;
-                oSucursalCLS.fechaApertura = (DateTime) oSucursal.FECHAAPERTURA;
+                oSucursalCLS.fechaApertura = (DateTime)oSucursal.FECHAAPERTURA;
             }
             return View(oSucursalCLS);
         }
@@ -52,9 +64,16 @@ namespace PruebasRazor.Controllers
         [HttpPost]
         public ActionResult Editar(SucursalCLS oSucursalCLS)
         {
+            int nregistrosEncontrados = 0;
+            string nombreSucursal = oSucursalCLS.nombre;
             int idSucursal = oSucursalCLS.iidsucursal;
-            if (!ModelState.IsValid)
+            using (var bd = new BDPasajeEntities())
             {
+                nregistrosEncontrados = bd.Sucursal.Where(p => p.NOMBRE.Equals(nombreSucursal) && !p.IIDSUCURSAL.Equals(idSucursal)).Count();
+            }
+            if (!ModelState.IsValid || nregistrosEncontrados >= 1)
+            {
+                if (nregistrosEncontrados >= 1) oSucursalCLS.mensajeError = "ya existe la sucursal";
                 return View(oSucursalCLS);
             }
             using (var bd = new BDPasajeEntities())
@@ -73,8 +92,15 @@ namespace PruebasRazor.Controllers
         [HttpPost]
         public ActionResult Agregar(SucursalCLS oSucursalCLS)
         {
-            if (!ModelState.IsValid)
+            int nregistrosEncontrados = 0;
+            string nombreSucursal = oSucursalCLS.nombre;
+            using (var bd = new BDPasajeEntities())
             {
+                nregistrosEncontrados = bd.Sucursal.Where(p => p.NOMBRE.Equals(nombreSucursal)).Count();
+            }
+            if (!ModelState.IsValid || nregistrosEncontrados >= 1)
+            {
+                if (nregistrosEncontrados >= 1) oSucursalCLS.mensajeError = "ya existe la sucursal a ingresar";
                 return View(oSucursalCLS);
             }
             using (var bd = new BDPasajeEntities())
@@ -89,7 +115,7 @@ namespace PruebasRazor.Controllers
                 bd.Sucursal.Add(oSucursal);
                 bd.SaveChanges();
             }
-                return RedirectToAction("Index");
+            return RedirectToAction("Index");
         }
     }
 }

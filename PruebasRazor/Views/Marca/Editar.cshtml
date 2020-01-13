@@ -13,6 +13,10 @@
                 @Html.LabelFor(p => p.iidmarca)
                 @Html.TextBoxFor(p => p.iidmarca, new { @class = "form-control", @readOnly = true })
                 @Html.ValidationMessage("iidmarca", new { @class = "text-danger" })
+                @if (Model != null && Model.mensajeError != null)
+                {
+                    @Html.Label(Model.mensajeError, new { @class = "text-danger" })
+                }
             </div>
             <div>
                 @Html.LabelFor(p => p.nombre)
@@ -26,22 +30,14 @@
             </div>
             <br />
             <div style="margin:auto">
-                <input type="submit" class="btn btn-primary" value="Guardar" />
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    Guardar
+                </button>
                 @Html.ActionLink("Volver", "Index", "Marca", null, new { @class = "btn btn-danger" })
             </div>
         }
     </div>
 </div>
-
-<script>
-    var frmEditar = document.getElementById("frmEditar");
-    frmEditar.onsubmit = function (e) {
-        e.preventDefault();
-        if (confirm("¿Guardar cambios?") == 1) {
-            frmEditar.submit();
-        }
-    }
-</script>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -63,7 +59,7 @@
 
 <script>
     function Agregar() {
-        var frmCliente = document.getElementById("frmCliente");
-        frmCliente.submit();
+        var frmEditar = document.getElementById("frmEditar");
+        frmEditar.submit();
     }
 </script>

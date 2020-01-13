@@ -55,5 +55,7 @@ namespace PruebasRazor.Models
         public string nombreTipoBus { get; set; }
         [Display(Name = "Nombre Modelo")]
         public string nombreModelo { get; set; }
+
+        public string mensajeError { get; set; }
     }
 }

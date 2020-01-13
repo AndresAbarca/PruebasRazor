@@ -19,5 +19,8 @@ namespace PruebasRazor.Models
         [StringLength(200, ErrorMessage = "La longitud maxima es 200")]
         public string descripcion { get; set; }
         public int bhabilitado { get; set; }
+
+        //errores de validacion
+        public string mensajeError { get; set; }
     }
 }

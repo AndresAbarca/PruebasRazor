@@ -44,5 +44,8 @@ namespace PruebasRazor.Models
         [StringLength(10, ErrorMessage = "Longitud maxima 10")]
         public string telefonoCelular { get; set; }
         public int bhabilitado { get; set; }
+
+        //propiedad adicional
+        public string mensajeError { get; set; }
     }
 }

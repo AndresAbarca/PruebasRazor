@@ -102,7 +102,7 @@ namespace PruebasRazor.Controllers
             }
         }
 
-        public void listarCombos() 
+        public void listarCombos()
         {
             listarModelo();
             listarMarca();
@@ -124,26 +124,34 @@ namespace PruebasRazor.Controllers
             {
                 Bus oBus = bd.Bus.Where(p => p.IIDBUS.Equals(id)).First();
                 oBusCLS.iidBus = oBus.IIDBUS;
-                oBusCLS.iidSucursal = (int) oBus.IIDSUCURSAL;
-                oBusCLS.iidTipoBus = (int) oBus.IIDTIPOBUS;
-                oBusCLS.iidmarca = (int) oBus.IIDMARCA;
+                oBusCLS.iidSucursal = (int)oBus.IIDSUCURSAL;
+                oBusCLS.iidTipoBus = (int)oBus.IIDTIPOBUS;
+                oBusCLS.iidmarca = (int)oBus.IIDMARCA;
                 oBusCLS.placa = oBus.PLACA;
-                oBusCLS.fechaCompra = (DateTime) oBus.FECHACOMPRA;
-                oBusCLS.iidmodelo = (int) oBus.IIDMODELO;
-                oBusCLS.numeroColumnas = (int) oBus.NUMEROCOLUMNAS;
-                oBusCLS.numeroFilas = (int) oBus.NUMEROFILAS;
+                oBusCLS.fechaCompra = (DateTime)oBus.FECHACOMPRA;
+                oBusCLS.iidmodelo = (int)oBus.IIDMODELO;
+                oBusCLS.numeroColumnas = (int)oBus.NUMEROCOLUMNAS;
+                oBusCLS.numeroFilas = (int)oBus.NUMEROFILAS;
                 oBusCLS.descripcion = oBus.DESCRIPCION;
                 oBusCLS.observacion = oBus.OBSERVACION;
             }
-                return View(oBusCLS);
+            return View(oBusCLS);
         }
 
         [HttpPost]
         public ActionResult Editar(BusCLS oBusCLS)
         {
             int idBus = oBusCLS.iidBus;
-            if (!ModelState.IsValid)
+            int nregistrosEncontrados = 0;
+            string placa = oBusCLS.placa;
+            using (var bd = new BDPasajeEntities())
             {
+                nregistrosEncontrados = bd.Bus.Where(p => p.PLACA.Equals(placa) && !p.IIDBUS.Equals(idBus)).Count();
+            }
+            if (!ModelState.IsValid || nregistrosEncontrados>=1)
+            {
+                if (nregistrosEncontrados >= 1) oBusCLS.mensajeError = "ya existe";
+                listarCombos();
                 return View(oBusCLS);
             }
             using (var bd = new BDPasajeEntities())
@@ -166,10 +174,18 @@ namespace PruebasRazor.Controllers
         [HttpPost]
         public ActionResult Agregar(BusCLS oBusCLS)
         {
-            if (!ModelState.IsValid)
+            int nregistrosEncontrados = 0;
+            string placa = oBusCLS.placa;
+            using (var bd = new BDPasajeEntities())
             {
-                return View();
+                nregistrosEncontrados = bd.Bus.Where(p => p.PLACA.Equals(placa)).Count();
             }
+                if (!ModelState.IsValid && nregistrosEncontrados>=1 )
+                {
+                    if (nregistrosEncontrados >= 1) oBusCLS.mensajeError = "ya existe el bus";
+                    listarCombos();
+                    return View();
+                }
             using (var bd = new BDPasajeEntities())
             {
                 Bus oBus = new Bus();
@@ -187,7 +203,19 @@ namespace PruebasRazor.Controllers
                 bd.Bus.Add(oBus);
                 bd.SaveChanges();
             }
-                listarCombos();
+            listarCombos();
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Eliminar(int idbus)
+        {
+            using (var bd = new BDPasajeEntities())
+            {
+                Bus oBus = bd.Bus.Where(p => p.IIDBUS.Equals(idbus)).First();
+                oBus.BHABILITADO = 0;
+                bd.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
     }

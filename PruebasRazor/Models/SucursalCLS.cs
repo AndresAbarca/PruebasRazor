@@ -31,5 +31,9 @@ namespace PruebasRazor.Models
         [DataType(DataType.Date)]
         public DateTime fechaApertura { get; set; }
         public int bhabilitado { get; set; }
+
+
+        //propiedad adicional
+        public string mensajeError { get; set; }
     }
 }

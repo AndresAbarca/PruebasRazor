@@ -52,6 +52,18 @@ namespace PruebasRazor.Controllers
             return View();
         }
 
+        [HttpPost]
+        public ActionResult Eliminar(int iidcliente)
+        {
+            using (var bd = new BDPasajeEntities())
+            {
+                Cliente oCliente = bd.Cliente.Where(p => p.IIDCLIENTE.Equals(iidcliente)).First();
+                oCliente.BHABILITADO = 0;
+                bd.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
         public ActionResult Editar(int id)
         {
             ClienteCLS oClienteCLS = new ClienteCLS();
@@ -66,7 +78,7 @@ namespace PruebasRazor.Controllers
                 oClienteCLS.apMaterno = oCliente.APMATERNO;
                 oClienteCLS.direccion = oCliente.DIRECCION;
                 oClienteCLS.email = oCliente.EMAIL;
-                oClienteCLS.iidsexo = (int) oCliente.IIDSEXO;
+                oClienteCLS.iidsexo = (int)oCliente.IIDSEXO;
                 oClienteCLS.telefonoFijo = oCliente.TELEFONOFIJO;
                 oClienteCLS.telefonoCelular = oCliente.TELEFONOCELULAR;
             }
@@ -77,8 +89,17 @@ namespace PruebasRazor.Controllers
         public ActionResult Editar(ClienteCLS oClienteCLS)
         {
             int idcliente = oClienteCLS.iidcliente;
-            if (!ModelState.IsValid)
+            string nombre = oClienteCLS.nombre;
+            string apPaterno = oClienteCLS.apPaterno;
+            string apMaterno = oClienteCLS.apMaterno;
+            int nregistrosEncontrados = 0;
+            using (var bd = new BDPasajeEntities())
             {
+                nregistrosEncontrados = bd.Cliente.Where(p => p.NOMBRE.Equals(nombre) && p.APPATERNO.Equals(apPaterno) && p.APMATERNO.Equals(apMaterno) && p.IIDCLIENTE.Equals(idcliente)).Count();
+            }
+            if (!ModelState.IsValid || nregistrosEncontrados >= 1)
+            {
+                if (nregistrosEncontrados >= 1) oClienteCLS.mensajeError = "ya existe el cliente";
                 llenarSexo();
                 ViewBag.lista = listaSexo;
                 return View(oClienteCLS);
@@ -102,8 +123,17 @@ namespace PruebasRazor.Controllers
         [HttpPost]
         public ActionResult Agregar(ClienteCLS oClienteCLS)
         {
-            if (!ModelState.IsValid)
+            int nregistrosEncontrados = 0;
+            string nombre = oClienteCLS.nombre;
+            string apPaterno = oClienteCLS.apPaterno;
+            string apMaterno = oClienteCLS.apMaterno;
+            using (var bd = new BDPasajeEntities())
             {
+                nregistrosEncontrados = bd.Cliente.Where(p => p.NOMBRE.Equals(nombre) && p.APPATERNO.Equals(apPaterno) && p.APMATERNO.Equals(apMaterno)).Count();
+            }
+            if (!ModelState.IsValid || nregistrosEncontrados >= 1)
+            {
+                if (nregistrosEncontrados >= 1) oClienteCLS.mensajeError = "ya existe";
                 llenarSexo();
                 ViewBag.lista = listaSexo;
                 return View(oClienteCLS);

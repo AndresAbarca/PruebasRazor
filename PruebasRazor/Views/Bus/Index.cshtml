@@ -21,17 +21,51 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>@item.iidBus</td>
-            <td>@item.placa</td>
-            <td>@item.nombreModelo</td>
-            <td>@item.nombreSucursal</td>
-            <td>@item.nombreTipoBus</td>
-            <td>
-                @Html.ActionLink(" ", "Editar", "Bus", new { id = @item.iidBus }, new { @class = "glyphicon glyphicon-edit btn btn-primary" })
-                @Html.ActionLink(" ", "Eliminar", "Bus", new { id = @item.iidBus }, new { @class = "glyphicon glyphicon-trash btn btn-danger" })
-            </td>
-        </tr>
+            <tr>
+                <td>@item.iidBus</td>
+                <td>@item.placa</td>
+                <td>@item.nombreModelo</td>
+                <td>@item.nombreSucursal</td>
+                <td>@item.nombreTipoBus</td>
+                <td>
+                    @Html.ActionLink(" ", "Editar", "Bus", new { id = @item.iidBus }, new { @class = "glyphicon glyphicon-edit btn btn-primary" })
+                    <button type="button" onclick="mostrarPopup(@item.iidBus)" class="glyphicon glyphicon-trash btn btn-danger" data-toggle="modal" data-target="#exampleModal">
+                    </button>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
+
+@using (Html.BeginForm("Eliminar", "Bus", FormMethod.Post, new { @id = "frmEliminar" }))
+{
+    @Html.Hidden("iddHidden")
+}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Guardar Cambios?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
+                <button type="button" onclick="Aceptar()" class="btn btn-primary">ACEPTAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function mostrarPopup(idd) {
+        document.getElementById("iddHidden").value = idd;
+    }
+    function Aceptar() {
+        var frmEliminar = document.getElementById("frmEliminar");
+        frmEliminar.submit();
+    }
+</script>
