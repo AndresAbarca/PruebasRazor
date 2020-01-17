@@ -35,9 +35,9 @@
     </tbody>
 </table>
 
-@using (Html.BeginForm("Eliminar", "Bus", FormMethod.Post, new { @id = "frmEliminar" }))
+@using (Html.BeginForm("Eliminar", "Sucursal", FormMethod.Post, new { @id = "frmSucursal" }))
 {
-    @Html.Hidden("iddHidden")
+    @Html.Hidden("txtIdScurusal")
 }
 
 <!-- Modal -->
@@ -59,11 +59,11 @@
 </div>
 
 <script>
-    function mostrarPopup(idd) {
-        document.getElementById("iddHidden").value = idd;
+    function mostrarPopup(idSucursal) {
+        document.getElementById("txtIdSucursal").value = idSucursal;
     }
     function Aceptar() {
-        var frmEliminar = document.getElementById("frmEliminar");
-        frmEliminar.submit();
+        var frmSucursal = document.getElementById("frmSucursal");
+        frmSucursal.submit();
     }
 </script>

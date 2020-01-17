@@ -32,9 +32,9 @@
     </tbody>
 </table>
 
-@using (Html.BeginForm("Eliminar", "Marca", FormMethod.Post, new { @id = "frmEliminar" }))
+@using (Html.BeginForm("Eliminar", "Marca", FormMethod.Post, new { @id = "frmMarca" }))
 {
-    @Html.TextBox("iddHidden")
+    @Html.Hidden("txtIdMarca")
 }
 
 <!-- Modal -->
@@ -56,11 +56,11 @@
 </div>
 
 <script>
-    function mostrarPopup(idd) {
-        document.getElementById("iddHidden").value = idd;
+    function mostrarPopup(idMarca) {
+        document.getElementById("txtIdMarca").value = idMarca;
     }
     function Aceptar() {
-        var frmEliminar = document.getElementById("frmEliminar").value;
-        frmEliminar.submit();
+        var frmMarca = document.getElementById("frmMarca");
+        frmMarca.submit();
     }
 </script>

@@ -99,11 +99,11 @@ namespace PruebasRazor.Controllers
         }
 
         [HttpPost]
-        public ActionResult Eliminar(int idd)
+        public ActionResult Eliminar(int txtIdMarca)
         {
             using (var bd = new BDPasajeEntities())
             {
-                Marca oMarca = bd.Marca.Where(p => p.IIDMARCA.Equals(idd)).First();
+                Marca oMarca = bd.Marca.Where(p => p.IIDMARCA.Equals(txtIdMarca)).First();
                 oMarca.BHABILITADO = 0;
                 bd.SaveChanges();
             }

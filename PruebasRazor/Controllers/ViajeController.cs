@@ -118,5 +118,42 @@ namespace PruebasRazor.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public ActionResult Agregar(ViajeCLS oViajeCLS)
+        {
+            //puede haber varios viajes al dia con estas caracteristicas
+            if (!ModelState.IsValid)
+            {
+                listarCombos();
+                return View(oViajeCLS);
+            }
+            using (var bd = new BDPasajeEntities())
+            {
+                Viaje oViaje = new Viaje();
+                oViaje.IIDLUGARORIGEN = oViajeCLS.iidLugarOrigen;
+                oViaje.IIDLUGARDESTINO = oViajeCLS.iidLugarDestino;
+                oViaje.PRECIO = oViajeCLS.precio;
+                oViaje.FECHAVIAJE = oViajeCLS.fechaViaje;
+                oViaje.IIDBUS = oViajeCLS.iidBus;
+                oViaje.NUMEROASIENTOSDISPONIBLES = oViajeCLS.numeroAsientosDisponibles;
+                oViaje.BHABILITADO = 1;
+                bd.Viaje.Add(oViaje);
+                bd.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Eliminar(int txtIdViaje)
+        {
+            using (var bd = new BDPasajeEntities())
+            {
+                Viaje oViaje = bd.Viaje.Where(p => p.IIDVIAJE.Equals(txtIdViaje)).First();
+                oViaje.BHABILITADO = 0;
+                bd.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
     }
 }
