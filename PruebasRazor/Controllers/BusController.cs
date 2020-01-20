@@ -208,11 +208,11 @@ namespace PruebasRazor.Controllers
         }
 
         [HttpPost]
-        public ActionResult Eliminar(int idbus)
+        public ActionResult Eliminar(int txtIdBus)
         {
             using (var bd = new BDPasajeEntities())
             {
-                Bus oBus = bd.Bus.Where(p => p.IIDBUS.Equals(idbus)).First();
+                Bus oBus = bd.Bus.Where(p => p.IIDBUS.Equals(txtIdBus)).First();
                 oBus.BHABILITADO = 0;
                 bd.SaveChanges();
             }

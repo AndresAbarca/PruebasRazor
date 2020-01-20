@@ -53,11 +53,11 @@ namespace PruebasRazor.Controllers
         }
 
         [HttpPost]
-        public ActionResult Eliminar(int iidcliente)
+        public ActionResult Eliminar(int txtIdCliente)
         {
             using (var bd = new BDPasajeEntities())
             {
-                Cliente oCliente = bd.Cliente.Where(p => p.IIDCLIENTE.Equals(iidcliente)).First();
+                Cliente oCliente = bd.Cliente.Where(p => p.IIDCLIENTE.Equals(txtIdCliente)).First();
                 oCliente.BHABILITADO = 0;
                 bd.SaveChanges();
             }

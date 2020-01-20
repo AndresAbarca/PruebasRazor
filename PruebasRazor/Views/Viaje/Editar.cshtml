@@ -4,7 +4,7 @@
     List<SelectListItem> listaBus = (List<SelectListItem>)ViewBag.listaBus;
     List<SelectListItem> listaLugar = (List<SelectListItem>)ViewBag.listaLugar;
 }
-@using (Html.BeginForm(Html.BeginForm("Editar", "Viaje", FormMethod.Post, new { @id = "frmEditar" })))
+@using (Html.BeginForm(Html.BeginForm("Editar", "Viaje", FormMethod.Post, new { @id = "frmViaje" })))
 {
     @Html.AntiForgeryToken()
 

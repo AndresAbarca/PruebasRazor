@@ -188,11 +188,11 @@ namespace PruebasRazor.Controllers
         }
 
         [HttpPost]
-        public ActionResult Eliminar(int idempleado)
+        public ActionResult Eliminar(int txtIdEmpleado)
         {
             using (var bd = new BDPasajeEntities())
             {
-                Empleado oEmpleado = bd.Empleado.Where(p => p.IIDEMPLEADO.Equals(idempleado)).First();
+                Empleado oEmpleado = bd.Empleado.Where(p => p.IIDEMPLEADO.Equals(txtIdEmpleado)).First();
                 oEmpleado.BHABILITADO = 0;
                 bd.SaveChanges();
             }

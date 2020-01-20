@@ -34,11 +34,12 @@ namespace PruebasRazor.Controllers
             return View();
         }
 
-        public ActionResult Eliminar(int id)
+        [HttpPost]
+        public ActionResult Eliminar(int txtIdSucursal)
         {
             using (var bd = new BDPasajeEntities())
             {
-                Sucursal oSucursal = bd.Sucursal.Where(p => p.IIDSUCURSAL.Equals(id)).First();
+                Sucursal oSucursal = bd.Sucursal.Where(p => p.IIDSUCURSAL.Equals(txtIdSucursal)).First();
                 oSucursal.BHABILITADO = 0;
                 bd.SaveChanges();
             }

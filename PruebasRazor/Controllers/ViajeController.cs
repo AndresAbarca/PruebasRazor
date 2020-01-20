@@ -15,6 +15,7 @@ namespace PruebasRazor.Controllers
             using (var bd = new BDPasajeEntities())
             {
                 listaViaje = (from viaje in bd.Viaje
+                              where viaje.BHABILITADO==1
                               join lugarOrigen in bd.Lugar
                               on viaje.IIDLUGARORIGEN equals lugarOrigen.IIDLUGAR
                               join lugarDestino in bd.Lugar
@@ -101,6 +102,7 @@ namespace PruebasRazor.Controllers
             int idviaje = oViajeCLS.iidViaje;
             if (!ModelState.IsValid)
             {
+                listarCombos();
                 return View(oViajeCLS);
             }
             using (var bd = new BDPasajeEntities())
