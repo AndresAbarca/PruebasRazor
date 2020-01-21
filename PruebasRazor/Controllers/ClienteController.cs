@@ -10,21 +10,39 @@ namespace PruebasRazor.Controllers
     public class ClienteController : Controller
     {
         // GET: Cliente
-        public ActionResult Index()
+        public ActionResult Index(ClienteCLS oClienteCLS)
         {
+            int sexoCliente = oClienteCLS.iidsexo;
             List<ClienteCLS> listaCliente = null;
+            llenarSexo();
+            ViewBag.lista = listaSexo;
             using (var bd = new BDPasajeEntities())
             {
-                listaCliente = (from cliente in bd.Cliente
-                                where cliente.BHABILITADO == 1
-                                select new ClienteCLS
-                                {
-                                    iidcliente = cliente.IIDCLIENTE,
-                                    nombre = cliente.NOMBRE,
-                                    apPaterno = cliente.APPATERNO,
-                                    apMaterno = cliente.APMATERNO,
-                                    telefonoFijo = cliente.TELEFONOFIJO
-                                }).ToList();
+                if (sexoCliente==0) {
+                    listaCliente = (from cliente in bd.Cliente
+                                    where cliente.BHABILITADO == 1
+                                    select new ClienteCLS
+                                    {
+                                        iidcliente = cliente.IIDCLIENTE,
+                                        nombre = cliente.NOMBRE,
+                                        apPaterno = cliente.APPATERNO,
+                                        apMaterno = cliente.APMATERNO,
+                                        telefonoFijo = cliente.TELEFONOFIJO
+                                    }).ToList();
+                }
+                else {
+                    listaCliente = (from cliente in bd.Cliente
+                                    where cliente.BHABILITADO == 1
+                                    && cliente.IIDSEXO == sexoCliente
+                                    select new ClienteCLS
+                                    {
+                                        iidcliente = cliente.IIDCLIENTE,
+                                        nombre = cliente.NOMBRE,
+                                        apPaterno = cliente.APPATERNO,
+                                        apMaterno = cliente.APMATERNO,
+                                        telefonoFijo = cliente.TELEFONOFIJO
+                                    }).ToList();
+                }
             }
             return View(listaCliente);
         }
@@ -99,7 +117,7 @@ namespace PruebasRazor.Controllers
             }
             if (!ModelState.IsValid || nregistrosEncontrados >= 1)
             {
-                if (nregistrosEncontrados >= 1) oClienteCLS.mensajeError = "ya existe el cliente";
+                if (nregistrosEncontrados > 1) oClienteCLS.mensajeError = "ya existe el cliente";
                 llenarSexo();
                 ViewBag.lista = listaSexo;
                 return View(oClienteCLS);

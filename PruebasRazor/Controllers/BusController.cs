@@ -9,9 +9,11 @@ namespace PruebasRazor.Controllers
     public class BusController : Controller
     {
         // GET: Bus
-        public ActionResult Index()
+        public ActionResult Index(BusCLS oBusCLS)
         {
-            List<BusCLS> listaBus = null;
+            listarCombos();
+            List<BusCLS> listaBus = new List<BusCLS>();
+            List<BusCLS> listaRespuesta = null;
             using (var bd = new BDPasajeEntities())
             {
                 listaBus = (from bus in bd.Bus
@@ -28,8 +30,32 @@ namespace PruebasRazor.Controllers
                                 nombreModelo = tipoModelo.NOMBRE,
                                 nombreSucursal = sucursal.NOMBRE,
                                 nombreTipoBus = tipoBus.NOMBRE,
-                                placa = bus.PLACA
+                                placa = bus.PLACA,
+                                iidmodelo = tipoModelo.IIDMODELO,
+                                iidSucursal = sucursal.IIDSUCURSAL,
+                                iidTipoBus = tipoBus.IIDTIPOBUS
                             }).ToList();
+                if (oBusCLS.iidBus != 0)
+                {
+                    listaBus = listaBus.Where(p => p.iidBus.ToString().Contains(oBusCLS.iidBus.ToString())).ToList();
+                }
+                if (oBusCLS.placa != null)
+                {
+                    listaBus = listaBus.Where(p => p.placa.Contains(oBusCLS.placa)).ToList();
+                }
+                if (oBusCLS.iidmodelo != 0)
+                {
+                    listaBus = listaBus.Where(p => p.iidmodelo.ToString().Contains(oBusCLS.iidmodelo.ToString())).ToList();
+                }
+                if (oBusCLS.iidSucursal != 0)
+                {
+                    listaBus = listaBus.Where(p => p.iidSucursal.ToString().Contains(oBusCLS.iidSucursal.ToString())).ToList();
+                }
+                if (oBusCLS.iidTipoBus != 0)
+                {
+                    listaBus = listaBus.Where(p => p.iidTipoBus.ToString().Contains(oBusCLS.iidTipoBus.ToString())).ToList();
+                }
+
             }
             return View(listaBus);
         }
@@ -148,7 +174,7 @@ namespace PruebasRazor.Controllers
             {
                 nregistrosEncontrados = bd.Bus.Where(p => p.PLACA.Equals(placa) && !p.IIDBUS.Equals(idBus)).Count();
             }
-            if (!ModelState.IsValid || nregistrosEncontrados>=1)
+            if (!ModelState.IsValid || nregistrosEncontrados >= 1)
             {
                 if (nregistrosEncontrados >= 1) oBusCLS.mensajeError = "ya existe";
                 listarCombos();
@@ -180,12 +206,12 @@ namespace PruebasRazor.Controllers
             {
                 nregistrosEncontrados = bd.Bus.Where(p => p.PLACA.Equals(placa)).Count();
             }
-                if (!ModelState.IsValid && nregistrosEncontrados>=1 )
-                {
-                    if (nregistrosEncontrados >= 1) oBusCLS.mensajeError = "ya existe el bus";
-                    listarCombos();
-                    return View();
-                }
+            if (!ModelState.IsValid && nregistrosEncontrados >= 1)
+            {
+                if (nregistrosEncontrados >= 1) oBusCLS.mensajeError = "ya existe el bus";
+                listarCombos();
+                return View();
+            }
             using (var bd = new BDPasajeEntities())
             {
                 Bus oBus = new Bus();

@@ -2,41 +2,57 @@
 @model List<BusCLS>
 @{
     ViewBag.Title = "Index";
+    List<SelectListItem> listaMarca = (List<SelectListItem>)ViewBag.listaMarca;
+    List<SelectListItem> listaModelo = (List<SelectListItem>)ViewBag.listaModelo;
+    List<SelectListItem> listaTipoBus = (List<SelectListItem>)ViewBag.listaTipoBus;
+    List<SelectListItem> listaSucursal = (List<SelectListItem>)ViewBag.listaSucursal;
 }
 
 <h2>Index</h2>
 
 @Html.ActionLink("Agregar", "Agregar", "Bus", new { @class = "btn btn-primary" })
-<table class="table table-bordered table-hover">
-    <thead>
-        <tr>
-            <td width="33%">@Html.LabelFor(p => Model[0].iidBus)</td>
-            <td width="33%">@Html.LabelFor(p => Model[0].placa)</td>
-            <td width="33%">@Html.LabelFor(p => Model[0].nombreModelo)</td>
-            <td width="33%">@Html.LabelFor(p => Model[0].nombreSucursal)</td>
-            <td width="33%">@Html.LabelFor(p => Model[0].nombreTipoBus)</td>
-            <td>Operaciones</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.iidBus</td>
-                <td>@item.placa</td>
-                <td>@item.nombreModelo</td>
-                <td>@item.nombreSucursal</td>
-                <td>@item.nombreTipoBus</td>
-                <td>
-                    @Html.ActionLink(" ", "Editar", "Bus", new { id = @item.iidBus }, new { @class = "glyphicon glyphicon-edit btn btn-primary" })
-                    <button type="button" onclick="mostrarPopup(@item.iidBus)" class="glyphicon glyphicon-trash btn btn-danger" data-toggle="modal" data-target="#exampleModal">
-                    </button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 
+@using (Html.BeginForm("Index", "Bus", FormMethod.Post, new {@id="frmFiltrado" }))
+{
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <td width="33%">@Html.LabelFor(p => Model[0].iidBus)</td>
+                <td width="33%">@Html.LabelFor(p => Model[0].placa)</td>
+                <td width="33%">@Html.LabelFor(p => Model[0].nombreModelo)</td>
+                <td width="33%">@Html.LabelFor(p => Model[0].nombreSucursal)</td>
+                <td width="33%">@Html.LabelFor(p => Model[0].nombreTipoBus)</td>
+                <td>Operaciones</td>
+            </tr>
+            <tr>
+                <td>@Html.TextBox("iidBus", null, new { @class = "form-control" })</td>
+                <td>@Html.TextBox("placa", null, new { @class = "form-control" })</td>
+                <td>@Html.DropDownList("iidModelo", listaModelo, null, new { @class = "form-control" })</td>
+                <td>@Html.DropDownList("iidSucursal", listaSucursal, null, new { @class = "form-control" })</td>
+                <td>@Html.DropDownList("iidTipoBus", listaTipoBus, null, new { @class = "form-control" })</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.iidBus</td>
+                    <td>@item.placa</td>
+                    <td>@item.nombreModelo</td>
+                    <td>@item.nombreSucursal</td>
+                    <td>@item.nombreTipoBus</td>
+                    <td>
+                        @Html.ActionLink(" ", "Editar", "Bus", new { id = @item.iidBus }, new { @class = "glyphicon glyphicon-edit btn btn-primary" })
+                        <button type="button" onclick="mostrarPopup(@item.iidBus)" class="glyphicon glyphicon-trash btn btn-danger" data-toggle="modal" data-target="#exampleModal">
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 @using (Html.BeginForm("Eliminar", "Bus", FormMethod.Post, new { @id = "frmBus" }))
 {
     @Html.Hidden("txtIdBus")
@@ -61,6 +77,14 @@
 </div>
 
 <script>
+    var frmFiltrado = document.getElementById("frmFiltrado");
+    var controles = document.getElementsByClassName("form-control");
+    var ncontroles = controles.length;
+    for (var i = 0; i < ncontroles;i++) {
+        controles[i].onchange = function () {
+            frmFiltrado.submit();
+        }
+    }
     function mostrarPopup(idBus) {
         document.getElementById("txtIdBus").value = idBus;
     }

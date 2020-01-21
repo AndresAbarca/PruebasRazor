@@ -129,6 +129,7 @@
     <Compile Include="Controllers\EmpleadoController.cs" />
     <Compile Include="Controllers\MarcaController.cs" />
     <Compile Include="Controllers\SucursalController.cs" />
+    <Compile Include="Controllers\TipoUsuarioController.cs" />
     <Compile Include="Controllers\ViajeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -204,6 +205,7 @@
     <Compile Include="Models\TipoUsuario.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TipoUsuarioCLS.cs" />
     <Compile Include="Models\TIPOUSUARIOREGISTRO.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -259,6 +261,7 @@
     <Content Include="Views\Bus\Editar.cshtml" />
     <Content Include="Views\Viaje\Agregar.cshtml" />
     <Content Include="Views\Viaje\Editar.cshtml" />
+    <Content Include="Views\TipoUsuario\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

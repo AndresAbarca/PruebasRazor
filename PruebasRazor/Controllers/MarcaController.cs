@@ -10,19 +10,34 @@ namespace PruebasRazor.Controllers
     public class MarcaController : Controller
     {
         // GET: Marca
-        public ActionResult Index()
+        public ActionResult Index(MarcaCLS oMarcaCLS)
         {
+            string nombreMarca = oMarcaCLS.nombre;
             List<MarcaCLS> listaMarca = null;
             using (var bd = new BDPasajeEntities())
             {
-                listaMarca = (from marca in bd.Marca
-                              where marca.BHABILITADO == 1
-                              select new MarcaCLS
-                              {
-                                  iidmarca = marca.IIDMARCA,
-                                  nombre = marca.NOMBRE,
-                                  descripcion = marca.DESCRIPCION
-                              }).ToList();
+                if (nombreMarca == null)
+                {
+                    listaMarca = (from marca in bd.Marca
+                                  where marca.BHABILITADO == 1
+                                  select new MarcaCLS
+                                  {
+                                      iidmarca = marca.IIDMARCA,
+                                      nombre = marca.NOMBRE,
+                                      descripcion = marca.DESCRIPCION
+                                  }).ToList();
+                }
+                else {
+                    listaMarca = (from marca in bd.Marca
+                                  where marca.BHABILITADO == 1
+                                  && marca.NOMBRE.Contains(nombreMarca)
+                                  select new MarcaCLS
+                                  {
+                                      iidmarca = marca.IIDMARCA,
+                                      nombre = marca.NOMBRE,
+                                      descripcion = marca.DESCRIPCION
+                                  }).ToList();
+                }
             }
             return View(listaMarca);
         }
