@@ -1,0 +1,30 @@
+﻿@using PruebasRazor.Models
+@model List<RolPaginaCLS>
+@{
+    ViewBag.Title = "Index";
+    List<SelectListItem> listaRol = (List<SelectListItem>)ViewBag.listaRol;
+}
+
+<h2>Index</h2>
+
+@using (Ajax.BeginForm("Filtrar", "RolPagina", new AjaxOptions
+{
+    HttpMethod = "POST",
+    UpdateTargetId = "divRolPagina",
+    InsertionMode = InsertionMode.Replace
+}, new { @id = "frmFiltrado" }))
+{
+    @Html.DropDownList("iidrol", listaRol, new { @class = "form-control" })
+
+    <div id="divRolPagina">
+        @Html.Partial("_TableRolPagina", Model)
+    </div>
+}
+
+<script>
+    var iidrol = document.getElementById("iidrol");
+    iidrol.onchange = function () {
+        $("#frmFiltrado").trigger("submit");
+    }
+</script>
+
